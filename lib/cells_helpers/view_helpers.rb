@@ -7,7 +7,7 @@ module CellsHelpers
     end
 
     def render_each_and_join(views)
-      views.map{ |view| render(view) }.join
+      views.map { |view| render(view) }.join
     end
 
     class_methods do
