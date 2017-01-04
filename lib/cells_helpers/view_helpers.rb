@@ -18,6 +18,18 @@ module CellsHelpers
           end
         end
       end
+
+      def date_property(*array)
+        options = array.pop if array.last.is_a?(Hash)
+        options ||= {}
+        array.each do |field|
+          format = options[:format] || :default
+          name = options[:prefix] ? "#{options[:prefix]}_#{field}" : field
+          define_method(name) do
+            I18n.l(model.send(field), format: format)
+          end
+        end
+      end
     end
   end
 end
