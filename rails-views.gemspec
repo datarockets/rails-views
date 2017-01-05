@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'rails_views/version'
+require 'rails/views/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = 'rails_views'
-  spec.version       = RailsViews::VERSION
+  spec.name          = 'rails-views'
+  spec.version       = Rails::Views::VERSION
   spec.authors       = ['Roman Dubrovsky']
   spec.email         = ['roma2107946@gmail.com']
 
   spec.summary       = 'Datarockets cells helpers'
   spec.description   = 'Helpers for easy working and clear code'
-  spec.homepage      = 'https://github.com/datarockets/rails_views'
+  spec.homepage      = 'https://github.com/datarockets/rails-views'
   spec.license       = 'MIT'
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
