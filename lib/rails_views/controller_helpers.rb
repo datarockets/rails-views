@@ -1,4 +1,4 @@
-class CellsHelpers
+class RailsViews
   module ControllerHelpers
     def self.included(base)
       # Protect from trying to augment modules that appear

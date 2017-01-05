@@ -1,4 +1,4 @@
-class CellsHelpers
+class RailsViews
   module ViewHelpers
     extend ActiveSupport::Concern
 
