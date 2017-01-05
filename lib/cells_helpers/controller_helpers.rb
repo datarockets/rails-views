@@ -32,11 +32,31 @@ class CellsHelpers
 
     def render_with_cells(options = nil, *args, &block)
       if options.is_a?(Hash) && options.key?(:cell)
-        binding.pry
-        render nothing: true
+        normalize_options = _normalize_render(options, *args)
+        cell_name = find_cell_name(normalize_options)
+        render html: call_cell(cell_name, normalize_options), layout: normalize_options[:layout]
       else
         render_without_cells(options, *args, &block)
       end
+    end
+
+    private
+
+    def find_cell_name(options)
+      prefix_name = options[:prefixes].try(:first)
+      postfix_name = '/cell'
+      if (options[:cell] == true) && prefix_name
+        prefix_name + postfix_name
+      elsif options[:cell].is_a?(Symbol) && prefix_name
+        prefix_name + '/' + options[:cell].to_s + postfix_name
+      else
+        options[:cell] + postfix_name
+      end
+    end
+
+    def call_cell(cell_name, options)
+      cell_options = options[:options] || {}
+      concept(cell_name, options[:model], cell_options)
     end
   end
 end
