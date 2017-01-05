@@ -1,6 +1,6 @@
 require 'cells_helpers/version'
 require 'cells_helpers/view_helpers'
+require 'cells_helpers/railtie'
 
-module CellsHelpers
-  # Your code goes here...
+class CellsHelpers
 end
