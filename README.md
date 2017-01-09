@@ -1,38 +1,136 @@
-# Cells::Helpers
+# Rails::Views
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/cells/helpers`. To experiment with that code, run `bin/console` for an interactive prompt.
+*View Components for Ruby and Rails.*
 
-TODO: Delete this and the text above, and describe your gem
+The gem provides view models for Ruby web applications. View models are plain objects that represent a part of the web page. View models can also render views, and be nested.
+
+This gem bases on [cells](https://github.com/trailblazer/cells).
 
 ## Installation
 
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'cells-helpers'
+gem 'rails-views'
 ```
 
 And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install cells-helpers
-
 ## Usage
 
-TODO: Write usage instructions here
+This gem bases on [cells](https://github.com/trailblazer/cells), but includes only `Concept` logic.
 
-## Development
+A view is a light-weight class with `show` methods that render views.
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```ruby
+class Comment::Cell < Cell::Concept
+  def show
+    render
+  end
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+  private
+
+  property :body, :author
+
+  def author_link
+    link_to "#{author.email}", author
+  end
+end
+```
+
+## Rendering
+
+Gem provides logic for rendering cells instead of ActionView templates.
+
+```ruby
+def CommentsController < ApplicationController
+  def index
+    render cell: true # will render Comments::Cell
+  end
+
+  def show
+    @comment = Comment.find(params[:id])
+    render cell: :show, model: @comment # will render Comments::Show::Cell with @comment as model
+  end
+
+  def new
+    @comment = Comment.new
+    @user = User.find(params[:user_id])
+    render cell: 'user/comment', model: @comment, options: {user: @user} # will render User::Comment::Cell with @comment as model and user options
+  end
+end
+```
+
+## Helpers
+
+Also gem provides new helpers for rails.
+
+Include module with helpers to your view model.
+
+```ruby
+include Rails::Views::ViewHelpers
+```
+
+### Flash
+
+Provide method for working with flash.
+
+```ruby
+= flash[:notice]
+```
+
+### Render partials array
+
+Method `render_each_and_join` can render array of templates and join it in one string.
+
+```ruby
+class User::Info::Cell < Application::Cell
+  private
+
+  def parts_of_info
+    %w(contact_information about jobs transactions_list)
+  end
+
+  def info_body
+    render_each_and_join(parts_of_info)
+  end
+end
+
+class User::ShortInfo::Cell < User::Info::Cell
+  private
+
+  def parts_of_info
+    %w(contact_information about)
+  end
+end
+```
+
+### Options
+
+Provide `options` reader. You can have automatic readers to the options's fields by using `::option`
+
+```ruby
+class User::Comment::Cell < Application::Cell
+  private
+    options :user # delegate to options[:user]
+
+    delegate :email, to: :user, prefix: true
+end
+```
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/cells-helpers.
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Run the test suite and check the output (`rake`)
+4. Add tests for your feature or fix (please)
+5. Commit your changes (`git commit -am 'Add some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create new Pull Request
+
+Bug reports and pull requests are welcome on GitHub at https://github.com/datarockets/rails-views
 
 
 ## License
