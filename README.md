@@ -22,13 +22,10 @@ And then execute:
 
 This gem bases on [cells](https://github.com/trailblazer/cells), but includes only `Concept` logic.
 
-A view is a light-weight class with `show` methods that render views.
+A view is a light-weight class with `show.slim` temlate with base view logic.
 
 ```ruby
-class Comment::Cell < Cell::Concept
-  def show
-    render
-  end
+class Comment::Cell < Rails::View
 
   private
 
@@ -67,12 +64,6 @@ end
 
 Also gem provides new helpers for rails.
 
-Include module with helpers to your view model.
-
-```ruby
-include Rails::Views::ViewHelpers
-```
-
 ### Flash
 
 Provide method for working with flash.
@@ -86,7 +77,7 @@ Provide method for working with flash.
 Method `render_each_and_join` can render array of templates and join it in one string.
 
 ```ruby
-class User::Info::Cell < Application::Cell
+class User::Info::Cell < Rails::View
   private
 
   def parts_of_info
@@ -112,7 +103,7 @@ end
 Provide `options` reader. You can have automatic readers to the options's fields by using `::option`
 
 ```ruby
-class User::Comment::Cell < Application::Cell
+class User::Comment::Cell < Rails::View
   private
     options :user # delegate to options[:user]
 
