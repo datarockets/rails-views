@@ -26,8 +26,9 @@ module Rails
       def render_with_cells(options = nil, *args, &block)
         if options.is_a?(Hash) && options.key?(:cell)
           normalize_options = _normalize_render(options, *args)
-          cell_name = find_cell_name(normalize_options)
-          render html: call_cell(cell_name, normalize_options), layout: normalize_options[:layout]
+          cell_path = find_cell_path(normalize_options)
+
+          render html: call_cell(cell_path, normalize_options), layout: normalize_options[:layout]
         else
           render_without_cells(options, *args, &block)
         end
@@ -35,21 +36,27 @@ module Rails
 
       private
 
-      def find_cell_name(options)
-        prefix_name = options[:prefixes].try(:first)
-        postfix_name = '/cell'
-        if (options[:cell] == true) && prefix_name
-          prefix_name + postfix_name
-        elsif options[:cell].is_a?(Symbol) && prefix_name
-          prefix_name + '/' + options[:cell].to_s + postfix_name
+      def find_cell_path(options)
+        cell_prefix_path = options[:prefixes].try(:first)
+        passed_cell = options[:cell]
+
+        if (passed_cell == true) && cell_prefix_path
+          cell_prefix_path + cell_postfix_path
+        elsif passed_cell.is_a?(Symbol) && cell_prefix_path
+          cell_prefix_path + '/' + passed_cell.to_s + cell_postfix_path
         else
-          options[:cell] + postfix_name
+          passed_cell + cell_postfix_path
         end
       end
 
-      def call_cell(cell_name, options)
+      def call_cell(cell_path, options)
         cell_options = options[:options] || {}
-        concept(cell_name, options[:model], cell_options)
+
+        concept(cell_path, options[:model], cell_options)
+      end
+
+      def cell_postfix_path
+        '/cell'
       end
     end
   end
