@@ -49,12 +49,14 @@ def CommentsController < ApplicationController
 
   def show
     @comment = Comment.find(params[:id])
+
     render cell: :show, model: @comment # will render Comments::Show::Cell with @comment as model
   end
 
   def new
     @comment = Comment.new
     @user = User.find(params[:user_id])
+
     render cell: 'user/comment', model: @comment, options: {user: @user} # will render User::Comment::Cell with @comment as model and user options
   end
 end
