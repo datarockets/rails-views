@@ -1,7 +1,7 @@
 module Rails
   class Views
     module ViewHelpers
-      extend ActiveSupport::Concern
+      extend ::ActiveSupport::Concern
 
       def flash
         parent_controller.flash

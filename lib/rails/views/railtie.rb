@@ -2,7 +2,7 @@ require 'rails/views/controller_helpers'
 
 module Rails
   class Views
-    if defined?(Rails)
+    if defined?(Rails::VERSION)
       if Rails::VERSION::MAJOR >= 5
 
         class RailsViewsRailtie < Rails::Railtie
